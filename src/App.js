@@ -22,10 +22,13 @@ class App extends Component {
         </FreieTermine2>
       </soap12:Body>
     </soap12:Envelope>`;
-    const rsp = axios
-      .post('https://terminland.free.beeceptor.com', body, {
+    const rsp = 
+      axios({
+        url: 'https://www.terminland.de/pinuts/tlsoap/default.asmx',
+        method: 'post',
         headers: { 'Content-Type': 'application/soap+xml' },
-      })
+        body: body
+      })    
       .then(rsp => console.log(rsp));
 
     const response = await rsp;
