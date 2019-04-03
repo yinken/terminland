@@ -22,15 +22,18 @@ class App extends Component {
         </FreieTermine2>
       </soap12:Body>
     </soap12:Envelope>`;
-    const rsp = 
-      axios({
-        url: 'https://www.terminland.de/pinuts/tlsoap/default.asmx',
+    const rsp = await fetch(
+      'http://www.terminland.de/pinuts/tlsoap/default.asmx',
+      {
         method: 'post',
-        headers: { 'Content-Type': 'application/soap+xml' },
-        body: body
-      })    
-      .then(rsp => console.log(rsp));
-
+        headers: new Headers({
+          'Content-Type': 'text/xml',
+        }),
+        body: body,
+      }
+    ).catch(err => {
+      throw err;
+    });
     const response = await rsp;
 
     return response;
