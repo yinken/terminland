@@ -23,7 +23,7 @@ class App extends Component {
       </soap12:Body>
     </soap12:Envelope>`;
     const rsp = axios
-      .post('https://www.terminland.de/pinuts/tlsoap/default.asmx', body, {
+      .post('https://terminland.free.beeceptor.com', body, {
         headers: { 'Content-Type': 'application/soap+xml' },
       })
       .then(rsp => console.log(rsp));
