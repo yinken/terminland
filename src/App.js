@@ -23,7 +23,7 @@ class App extends Component {
       </soap12:Body>
     </soap12:Envelope>`;
     const rsp = await fetch(
-      'http://www.terminland.de/pinuts/tlsoap/default.asmx',
+      'https://www.terminland.de/pinuts/tlsoap/default.asmx',
       {
         method: 'post',
         headers: new Headers({
