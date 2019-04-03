@@ -4,39 +4,63 @@ import axios from 'axios';
 
 class App extends Component {
   
-  async fetchFromAPI() {
-    const body = `<?xml version="1.0" encoding="utf-8"?>
-    <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
-      <soap12:Header>
-        <tl_Authentifizierung2 xmlns="wsCalendar3">
-          <TLNamespace>pinuts</TLNamespace>
-          <Login>tlsoap</Login>
-          <Password>ql6i2fhf</Password>
-        </tl_Authentifizierung2>
-      </soap12:Header>
-      <soap12:Body>
-        <FreieTermine2 xmlns="wsCalendar3">
-          <Terminplan>1</Terminplan>
-          <DatumVon_UTC>20190401T000000Z</DatumVon_UTC>
-          <DatumBis_UTC>20190430T000000Z</DatumBis_UTC>
-        </FreieTermine2>
-      </soap12:Body>
-    </soap12:Envelope>`;
-    const rsp = await fetch(
-      'https://www.terminland.de/pinuts/tlsoap/default.asmx',
-      {
-        method: 'post',
-        headers: new Headers({
-          'Content-Type': 'text/xml',
-        }),
-        body: body,
-      }
-    ).catch(err => {
-      throw err;
-    });
-    const response = await rsp;
+  fetchFromAPI() {
+    const xmlhttp = new XMLHttpRequest();
+    xmlhttp.open(
+      'POST',
+      'https://interface.synxis.com/ChannelConnect.asmx',
+      true
+    );
 
-    return response;
+    // build SOAP request
+    const sr = `<?xml version="1.0" encoding="utf-8"?>
+		<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+			<soap:Header><HTNGHeader xmlns="http://htng.org/1.1/Header/"><From><Credential><userName>deshot</userName><password>trui32hn</password></Credential></From></HTNGHeader></soap:Header>
+			<soap:Body>
+			<OTA_HotelAvailRQ SummaryOnly="true" PrimaryLangID="en" xmlns="http://www.opentravel.org/OTA/2003/05">
+				<AvailRequestSegments>
+					<AvailRequestSegment>
+						<StayDateRange Start="2019-05-04" End="2019-05-05" />
+						<RoomStayCandidates>
+							<RoomStayCandidate Quantity="1">
+								<GuestCounts>
+									<GuestCount AgeQualifyingCode="10" Count="1" />';
+									</GuestCounts>
+							</RoomStayCandidate>
+						</RoomStayCandidates>
+						<HotelSearchCriteria>
+						<Criterion><HotelRef HotelCode="12435" /></Criterion>
+						</HotelSearchCriteria>
+					</AvailRequestSegment>
+				</AvailRequestSegments>
+				<HotelReservationIDs>
+					<HotelReservationID ResID_Type="14" ResID_Value="" />
+				</HotelReservationIDs>
+				<POS>
+				<Source>
+					<BookingChannel Primary="10" />
+					<RequestorId ID="10" />
+				</Source>
+				</POS>
+			</OTA_HotelAvailRQ>
+			</soap:Body>
+		</soap:Envelope>
+`;
+
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState === 4) {
+        if (xmlhttp.status === 200) {
+          console.log(xmlhttp.responseText);
+          // alert('done. use firebug/console to see network response');
+        }
+      }
+    };
+    // Send the POST request
+
+    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+    xmlhttp.send(sr);
+    // send request
+    // ...
   }
 
   componentDidMount() {
